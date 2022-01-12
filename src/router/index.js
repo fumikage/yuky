@@ -52,6 +52,13 @@ const routes = [
       return import("../views/register/Register6.vue");
     },
   },
+  {
+    path: "/login",
+    name: "Login",
+    component: function () {
+      return import("../views/main/Login.vue");
+    },
+  },
 ];
 
 const router = new VueRouter({

@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid h-100">
-    <div class="row align-items-center h-100 full-size">
+    <div class="row align-items-center h-100 full-size mt-4">
       <div class="col-lg-6 mx-auto">
         <b-card
           ><div class="row">
@@ -23,6 +23,7 @@
                 <div class="col-lg-6">
                   <b-form-input
                     placeholder="+33Numéro de téléphone"
+                    v-model="phone"
                   ></b-form-input>
                 </div>
                 <div class="col-lg-3"></div>
@@ -43,9 +44,18 @@
 </template>
 <script>
 export default {
+  data: function () {
+    return {
+      phone: "",
+    };
+  },
+  beforeMount() {
+    this.phone = this.$store.state.user.create_user.phone;
+  },
   methods: {
     goNextStep: function () {
-      this.$router.push({ name: "Register6" });
+      this.$store.dispatch("user/setPhone", { phone: this.phone });
+      this.$router.push({ name: "Register5" });
     },
   },
 };
@@ -64,7 +74,6 @@ h2 {
 .full-size {
   height: 100vh;
   width: 100vw;
-  position: fixed;
   top: 0;
   left: 0;
 }

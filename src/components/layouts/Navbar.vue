@@ -18,11 +18,23 @@
             <template #button-content>
               <b-avatar></b-avatar>
             </template>
-            <b-dropdown-item href="#">Inscription</b-dropdown-item>
-            <b-dropdown-item href="#">Connexion</b-dropdown-item>
+            <b-dropdown-item v-on:click="goCreate">Inscription</b-dropdown-item>
+            <b-dropdown-item v-on:click="goLogin">Connexion</b-dropdown-item>
           </b-nav-item-dropdown>
         </b-navbar-nav>
       </b-collapse>
     </b-navbar>
   </div>
 </template>
+<script>
+export default {
+  methods: {
+    goCreate: function () {
+      this.$router.push({ name: "Register1" });
+    },
+    goLogin: function () {
+      this.$router.push({ name: "Login" });
+    },
+  },
+};
+</script>
