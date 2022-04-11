@@ -38,22 +38,44 @@
         </div>
         <div class="forms-login" v-if="modalNavActive.inscription">
           <label>prénom</label
-          ><input class="form-modal" type="text" v-model="loginMail" />
+          ><input class="form-modal" type="text" v-model="firstname" />
           <label>nom</label
-          ><input class="form-modal" type="text" v-model="loginMail" />
+          ><input class="form-modal" type="text" v-model="lastname" />
           <label>adresse mail</label
-          ><input class="form-modal" type="email" v-model="loginPassword" />
+          ><input
+            class="form-modal"
+            :class="formState.email"
+            type="email"
+            v-model="email"
+          />
+          <label class="error" v-if="emailAlreadyUse == '0'"
+            >Cette adresse email est déjà utilisé</label
+          >
           <label>mot de passe</label
-          ><input class="form-modal" type="password" v-model="loginPassword" />
+          ><input
+            class="form-modal"
+            :class="formState.password"
+            type="password"
+            v-model="password"
+          />
+          <label class="error" v-if="passwordValide === false"
+            >Votre mot de passe doit au moins contenir 8 caractère dont: 1
+            majuscule, 1 chiffre et 1 caractère spécial</label
+          >
           <label>confirmation mot de passe</label
-          ><input class="form-modal" type="password" v-model="loginPassword" />
+          ><input
+            class="form-modal"
+            :class="formState.confirmpassword"
+            type="password"
+            v-model="confirmpassword"
+          />
           <label>date de naissance</label
-          ><input class="form-modal" type="password" v-model="loginPassword" />
+          ><input class="form-modal" type="text" v-model="birthday" />
           <label>numéro de téléphone</label
-          ><input class="form-modal" type="password" v-model="loginPassword" />
+          ><input class="form-modal" type="text" v-model="phonenumber" />
           <label>Sexe</label
-          ><input class="form-modal" type="select" v-model="loginPassword" />
-          <button class="btn modal">CONNEXION</button>
+          ><input class="form-modal" type="select" v-model="sexe" />
+          <button class="btn modal">INSCRIPTION</button>
         </div>
         <div class="forms-login" v-if="modalNavActive.connexion">
           <label>adresse mail</label
@@ -199,6 +221,8 @@
 import Navbar from "@/components/layouts/Navbar.vue";
 import Panel from "@/components/home/Panel.vue";
 
+import EmailValidator from "email-validator";
+
 export default {
   name: "Home",
   components: {
@@ -209,11 +233,74 @@ export default {
     return {
       loginMail: "theocherblanc@gmail.com",
       loginPassword: "",
+      firstname: "theo",
+      lastname: "cherblanc",
+      email: "",
+      password: "",
+      confirmpassword: "",
+      birthday: "12/09/1999",
+      phonenumber: "0689157007",
+      sexe: "1",
+      emailAlreadyUse: "1",
+      passwordValide: true,
       modalNavActive: {
         connexion: true,
         inscription: false,
       },
+      formState: {
+        email: "",
+        password: "",
+        confirmpassword: "",
+      },
     };
+  },
+  watch: {
+    email: async function () {
+      let validate = await this.$store.dispatch("user/checkMail", {
+        mail: this.email,
+      });
+
+      if (validate == 0 || EmailValidator.validate(this.email) == false) {
+        this.formState.email = "invalide";
+      } else if (validate == 1 && EmailValidator.validate(this.email) == true) {
+        this.formState.email = "valide";
+      }
+      if (validate == 0) {
+        this.emailAlreadyUse = validate;
+      }
+    },
+    password: function () {
+      if (this.password === this.confirmpassword) {
+        this.formState.password = "valide";
+        this.formState.confirmpassword = "valide";
+      } else {
+        this.formState.password = "invalide";
+        this.formState.confirmpassword = "invalide";
+      }
+      if (this.validatePassword(this.password)) {
+        this.formState.password = "valide";
+        this.passwordValide = true;
+      } else {
+        this.passwordValide = false;
+        this.formState.password = "invalide";
+      }
+    },
+    confirmpassword: function () {
+      if (this.password === this.confirmpassword) {
+        this.formState.password = "valide";
+        this.formState.confirmpassword = "valide";
+      } else {
+        this.formState.password = "invalide";
+        this.formState.confirmpassword = "invalide";
+      }
+      if (this.validatePassword(this.password)) {
+        this.formState.password = "valide";
+        this.passwordValide = true;
+      } else {
+        this.passwordValide = false;
+        this.formState.password = "invalide";
+      }
+    },
   },
   methods: {
     openModal: function () {
@@ -239,6 +326,19 @@ export default {
         })
       ) {
         this.$modal.hide("login-modal");
+      }
+    },
+    validatePassword: function (password) {
+      if (
+        password.match(/[0-9]/g) &&
+        password.match(/[A-Z]/g) &&
+        password.match(/[a-z]/g) &&
+        password.match(/[^a-zA-Z\d]/g) &&
+        password.length >= 8
+      ) {
+        return true;
+      } else {
+        return false;
       }
     },
   },
@@ -564,11 +664,28 @@ export default {
     font-size: 20px;
     padding-left: 20px;
   }
+  .invalide {
+    background-image: url("../assets/icon/check_wrong.svg");
+    background-repeat: no-repeat;
+    background-position: 26em;
+    border: 2px solid #ff3939;
+  }
+  .valide {
+    background-image: url("../assets/icon/check_valid.svg");
+    background-repeat: no-repeat;
+    background-position: 26em;
+    border: 2px solid #87ff7e;
+  }
+
   .form-modal:focus {
     outline-color: #edf2f4;
   }
+
   .btn.modal {
     width: 100%;
+  }
+  label.error {
+    color: #ff3939;
   }
 }
 </style>

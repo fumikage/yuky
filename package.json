@@ -12,6 +12,7 @@
     "bootstrap": "^4.6.0",
     "bootstrap-icons": "^1.4.0",
     "bootstrap-vue": "^2.21.2",
+    "email-validator": "^2.0.4",
     "secure-ls": "^1.2.6",
     "sweetalert2": "^11.3.0",
     "vue": "^2.6.11",

@@ -17,35 +17,13 @@ export default {
   },
   getter: {},
   actions: {
-    async checkMail({ commit }, { mail }) {
+    async checkMail(context, { mail }) {
       try {
         let validate = await userService.checkMail(mail);
-        if (validate === 1) {
-          commit("mailChecked", { mail });
-          console.log("test");
-          notifier.success(
-            `Parfait !<br/>${mail} est une adresse valide &#x1F603`
-          );
-        } else {
-          notifier.error(`E-mail invalide, veuillez réessayer`);
-        }
-
         return validate;
       } catch (error) {
         APIError.handle(error);
       }
-    },
-    async setName({ commit }, { firstName, lastName }) {
-      commit("setName", { firstName, lastName });
-    },
-    async setBirthday({ commit }, { birthday }) {
-      commit("setBirthday", { birthday });
-    },
-    async setSex({ commit }, { sex }) {
-      commit("setSex", { sex });
-    },
-    async setPhone({ commit }, { phone }) {
-      commit("setPhone", { phone });
     },
 
     async create(context, { user, password }) {
@@ -104,19 +82,6 @@ export default {
       state.user = null;
       state.access_token = null;
       state.refresh_token = null;
-    },
-    setName(state, { firstName, lastName }) {
-      state.create_user.firstName = firstName;
-      state.create_user.lastName = lastName;
-    },
-    setBirthday(state, { birthday }) {
-      state.create_user.birthday = birthday;
-    },
-    setSex(state, { sex }) {
-      state.create_user.sex = sex;
-    },
-    setPhone(state, { phone }) {
-      state.create_user.phone = phone;
     },
   },
 };
