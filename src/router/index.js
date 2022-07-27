@@ -59,6 +59,13 @@ const routes = [
       return import("../views/main/Login.vue");
     },
   },
+  {
+    path: "/profil",
+    name: "Profil",
+    component: function () {
+      return import("../views/user/Profil.vue");
+    },
+  },
 ];
 
 const router = new VueRouter({

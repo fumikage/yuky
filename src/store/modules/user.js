@@ -26,16 +26,19 @@ export default {
       }
     },
 
-    async create(context, { user, password }) {
+    async create(
+      context,
+      { mail, password, phone, lastName, firstName, birthday, sex }
+    ) {
       try {
         const userdata = await userService.create(
-          user.mail,
+          mail,
           password,
-          user.phone,
-          user.lastName,
-          user.firstName,
-          user.birthday,
-          user.sex
+          phone,
+          lastName,
+          firstName,
+          birthday,
+          sex
         );
         notifier.success(`Utilisateur créer`);
         return userdata;

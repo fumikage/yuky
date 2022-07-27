@@ -10,6 +10,11 @@
       shiftY="0.5"
       scrollable="true"
       ><div class="content">
+        <img
+          src="../assets/icon/cross.svg"
+          style="cursor: pointer"
+          v-on:click="hideModal"
+        />
         <div class="modal-nav">
           <div
             class="underline-nav"
@@ -74,8 +79,12 @@
           <label>numéro de téléphone</label
           ><input class="form-modal" type="text" v-model="phonenumber" />
           <label>Sexe</label
-          ><input class="form-modal" type="select" v-model="sexe" />
-          <button class="btn modal">INSCRIPTION</button>
+          ><select class="form-modal" v-model="sexe">
+            <option value="0">Mme</option>
+            <option value="1">M.</option>
+            <option value="2">Je ne préfère pas le dire</option>
+          </select>
+          <button class="btn modal" v-on:click="register">INSCRIPTION</button>
         </div>
         <div class="forms-login" v-if="modalNavActive.connexion">
           <label>adresse mail</label
@@ -304,8 +313,10 @@ export default {
   },
   methods: {
     openModal: function () {
-      console.log("test");
       this.$modal.show("login-modal");
+    },
+    hideModal: function () {
+      this.$modal.hide("login-modal");
     },
     switchModalNav: function (nav) {
       this.modalNavActive = {
@@ -328,6 +339,24 @@ export default {
         this.$modal.hide("login-modal");
       }
     },
+    register: async function () {
+      console.log("test");
+      if (this.checkform() == true) {
+        let response = await this.$store.dispatch("user/create", {
+          mail: this.email,
+          password: this.password,
+          phone: this.phonenumber,
+          lastName: this.lastname,
+          firstName: this.firstname,
+          birthday: this.birthday,
+          sex: this.sexe,
+        });
+        if (response.data.id) {
+          this.modalNavActive.connexion = true;
+          this.modalNavActive.inscription = false;
+        }
+      }
+    },
     validatePassword: function (password) {
       if (
         password.match(/[0-9]/g) &&
@@ -341,31 +370,45 @@ export default {
         return false;
       }
     },
+    checkform: function () {
+      if (
+        this.formState.email &&
+        this.formState.password &&
+        this.formState.confirmpassword &&
+        this.firstname != "" &&
+        this.lastname != "" &&
+        this.birthday != "" &&
+        this.phonenumber != ""
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
   },
 };
 </script>
-<style>
+<style scoped>
 @media screen and (min-width: 1200px) {
   .container {
-    max-width: 1920px;
     min-height: 100%;
     padding: 0;
     margin: auto;
-    background-color: #2b2d42;
+    background-color: #1c2ce2;
     background-image: url(../assets/img/wavenavbar.png),
       url(../assets/img/graphic_home1.png), url(../assets/img/graphic_home2.png),
       url(../assets/img/graphic_pratique_rapide.png),
-      url(../assets/img/graphic_miouvelles.png),
-      url(../assets/img/chien_fond_onepage.png),
+      url(../assets/img/graphic_miouvelles.png)
+        url(../assets/img/chien_fond_onepage.png),
       url(../assets/img/fond_onepage.png),
       url(../assets/img/img_fond_section_communauté.png),
       url(../assets/img/fond_onepage.png);
 
     background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
       no-repeat, no-repeat, no-repeat, no-repeat;
-    background-size: 534px 101px, 400px 750px, 842px 1253px, 100%, 2183px 1231px,
+    background-size: 320px 55px, 240px 450px, 842px 1253px, 100%, 2183px 1231px,
       689px 992px, 100%, 100%, 100%;
-    background-position: 21% 0%, 0px 401px, 1200px 320px, 0px 2000px, 0px 3900px,
+    background-position: 21% 0%, 0px 201px, 1200px 320px, 0px 2000px, 0px 3900px,
       1400px 120px, 0% 0%, 0px 3100px, 0px 4400px;
   }
   .main .communauty2 {
@@ -381,14 +424,14 @@ export default {
 
     font-family: poppins-extrabold;
     color: #fbfeff;
-    font-size: 55px;
+    font-size: 3vw;
     margin: 5px;
     padding-bottom: 50px;
   }
   .main {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: 3fr 6fr 9fr 5fr 6fr 7fr 13fr 11fr 17fr 3fr 1fr;
+    grid-template-rows: 1fr 6fr 9fr 5fr 6fr 7fr 13fr 11fr 17fr 3fr 1fr;
   }
   .main .panel-container {
     margin-bottom: 5em;
@@ -454,7 +497,7 @@ export default {
   .footer-text {
     display: flex;
     font-family: poppins-regular;
-    font-size: 20px;
+    font-size: 1vw;
     color: #edf2f4;
     padding-left: 50px;
     justify-content: flex-start;
@@ -522,27 +565,27 @@ export default {
 
   .card-title1 {
     font-family: poppins-bold;
-    font-size: 50px;
+    font-size: 2.7vw;
     color: #2b2d42;
     padding-left: 50px;
     margin-top: 30px;
   }
   .card-text1 {
     font-family: poppins-regular;
-    font-size: 25px;
+    font-size: 1.3vw;
     color: #2b2d42;
     display: flex;
     padding-left: 50px;
   }
   .card-text2 {
     font-family: poppins-regular;
-    font-size: 25px;
+    font-size: 1.3vw;
     color: #edf2f4;
     padding-left: 50px;
   }
   .card-title2 {
     font-family: poppins-bold;
-    font-size: 50px;
+    font-size: 2.7vw;
     color: #edf2f4;
     padding-left: 50px;
     margin-top: 30px;
@@ -563,7 +606,7 @@ export default {
     width: 536px;
   }
   .title3 {
-    font-size: 30px;
+    font-size: 1.6vw;
     font-family: poppins-semibold;
     color: #2b2d42;
     text-align: center;
@@ -571,12 +614,12 @@ export default {
   .title1 {
     font-family: poppins-extrabold;
     color: #fbfeff;
-    font-size: 55px;
+    font-size: 3vw;
     margin: 5px;
   }
   .subtitle1 {
     font-family: poppins-regular;
-    font-size: 20px;
+    font-size: 1.1vw;
     max-width: 552px;
     color: #fbfeff;
     margin: 5px;
@@ -584,13 +627,13 @@ export default {
   .subtitle2 {
     font-family: poppins-bold;
     color: #fbfeff;
-    font-size: 50px;
+    font-size: 2.7vw;
     margin: 5px;
   }
   .description1 {
     font-family: poppins-regular;
     color: #fbfeff;
-    font-size: 20px;
+    font-size: 1.1vw;
     margin: 5px;
   }
   .color-text {
@@ -605,7 +648,7 @@ export default {
     height: 61px;
     text-align: center;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 0.8vw;
     border-radius: 40px;
     box-shadow: 0px 5px 6px #00000029;
     font-family: poppins-semibold;
@@ -625,7 +668,7 @@ export default {
     justify-content: space-evenly;
   }
   .navTitle {
-    font-size: 30px;
+    font-size: 1.1vw;
     color: #edf2f4;
     opacity: 0.5;
     font-family: poppins-regular;
@@ -652,7 +695,7 @@ export default {
   label {
     color: #fbfeff;
     font-family: poppins-light;
-    font-size: 20px;
+    font-size: 1.1vw;
   }
   .form-modal {
     border: 2px solid #8c8d9c;
@@ -661,7 +704,7 @@ export default {
     height: 50px;
     color: #fbfeff;
     font-family: poppins-light;
-    font-size: 20px;
+    font-size: 1.1vw;
     padding-left: 20px;
   }
   .invalide {
@@ -686,6 +729,35 @@ export default {
   }
   label.error {
     color: #ff3939;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .container {
+    max-width: 1920px;
+    min-height: 100%;
+    padding: 0;
+    margin: auto;
+    background-color: #2b2d42;
+    background-image: url(../assets/img/wavenavbar.png),
+      url(../assets/img/graphic_home1.png), url(../assets/img/graphic_home2.png),
+      url(../assets/img/graphic_pratique_rapide.png),
+      url(../assets/img/graphic_miouvelles.png),
+      url(../assets/img/chien_fond_onepage.png),
+      url(../assets/img/fond_onepage.png),
+      url(../assets/img/img_fond_section_communauté.png),
+      url(../assets/img/fond_onepage.png);
+
+    background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat,
+      no-repeat, no-repeat, no-repeat, no-repeat;
+    background-size: 534px 101px, 400px 750px, 842px 1253px, 100%, 2183px 1231px,
+      689px 992px, 100%, 100%, 100%;
+    background-position: 21% 0%, 0px 401px, 1200px 320px, 0px 2000px, 0px 3900px,
+      1400px 120px, 0% 0%, 0px 3100px, 0px 4400px;
+  }
+  .main {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 3fr 6fr 9fr 5fr 6fr 7fr 13fr 11fr 17fr 3fr 1fr;
   }
 }
 </style>
