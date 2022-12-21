@@ -1,6 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import userModule from "./modules/user";
+import habitationModule from "./modules/habitation";
+import petModule from "./modules/pet";
+import petsitterModule from "./modules/petsitter";
 import notifyModule from "./modules/notify";
 
 import createPersistedState from "vuex-persistedstate";
@@ -14,28 +17,31 @@ const ls = new SecureLS({ isCompression: false });
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {
-    user: userModule,
-    notify: notifyModule,
-  },
-  plugins: [
-    NotifyPlugin,
-    createPersistedState({
-      paths: ["user"],
-      storage: {
-        getItem: (key) => ls.get(key),
-        setItem: (key, value) => ls.set(key, value),
-        removeItem: (key) => ls.remove(key),
-      },
-    }),
-    // createPersistedState({
-    //     paths: [],
-    //     storage: sessionStorage,
-    // }),
-  ],
+    state: {},
+    mutations: {},
+    actions: {},
+    modules: {
+        user: userModule,
+        habitation: habitationModule,
+        pet: petModule,
+        petsitter: petsitterModule,
+        notify: notifyModule,
+    },
+    plugins: [
+        NotifyPlugin,
+        createPersistedState({
+            paths: ["user"],
+            storage: {
+                getItem: (key) => ls.get(key),
+                setItem: (key, value) => ls.set(key, value),
+                removeItem: (key) => ls.remove(key),
+            },
+        }),
+        // createPersistedState({
+        //     paths: [],
+        //     storage: sessionStorage,
+        // }),
+    ],
 });
 
 notifier.attachStore(store);

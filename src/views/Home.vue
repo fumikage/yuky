@@ -119,8 +119,8 @@
         <div class="right">
           <h2 class="subtitle2">Rejoigner notre communauté !</h2>
           <p class="description1">
-            Vous êtes déjà plus de <span class="color-text">10 000</span> à nous
-            avoir rejoint !
+            Vous êtes déjà plus de
+            <span class="color-text">10 000</span> à nous avoir rejoint !
           </p>
           <button class="btn" v-on:click="openModal">Créer mon profil</button>
         </div>

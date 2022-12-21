@@ -14,6 +14,9 @@ Vue.use(VModal);
 
 Vue.config.productionTip = false;
 
+//Style CSS
+
+import "@/assets/style/main.css";
 new Vue({
   router,
   store,
